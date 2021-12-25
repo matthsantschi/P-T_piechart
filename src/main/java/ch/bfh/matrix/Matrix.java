@@ -22,8 +22,22 @@ public class Matrix {
 		* @param values a non-empty and rectangular two-dimensional array
 		*/
 	public Matrix(final double[][] values) throws IllegalArgumentException {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		if (values == null) {
+			throw new IllegalArgumentException("values are null");
+		}
+		// check if each row has same amount of digits
+		int digitsInFirstRow = values[0].length;
+		for (double[] ds : values) {
+			if (ds.length != digitsInFirstRow) {
+				throw new IllegalArgumentException("Digits in rows are not equal");
+			}
+			if (ds.length == 0) {
+				throw new IllegalArgumentException("Please provide some Matrix Input");
+			}
+		}
+
+
+		this.values = values;
 	}
 
 	/**
