@@ -4,9 +4,9 @@
 package ch.bfh.matrix;
 
 /**
-	* Represents a two-dimensional matrix of double-values. Objects are immutable
-	* and methods implementing matrix operations always return new matrix objects.
-	*/
+ * Represents a two-dimensional matrix of double-values. Objects are immutable
+ * and methods implementing matrix operations always return new matrix objects.
+ */
 public class Matrix {
 
 	// expected precision in floating point calculations
@@ -16,11 +16,11 @@ public class Matrix {
 	protected double[][] values;
 
 	/**
-		* Creates a matrix with values given in a two-dimensional array. First
-		* dimension represents lines, second the columns.
-		*
-		* @param values a non-empty and rectangular two-dimensional array
-		*/
+	 * Creates a matrix with values given in a two-dimensional array. First
+	 * dimension represents lines, second the columns.
+	 *
+	 * @param values a non-empty and rectangular two-dimensional array
+	 */
 	public Matrix(final double[][] values) throws IllegalArgumentException {
 		if (values == null) {
 			throw new IllegalArgumentException("values are null");
@@ -36,79 +36,118 @@ public class Matrix {
 			}
 		}
 
-
 		this.values = values;
 	}
 
 	/**
-		* @return the number of lines in this matrix
-		*/
+	 * @return the number of lines in this matrix
+	 */
 	public int getNbOfLines() {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		return this.values.length;
 	}
 
 	/**
-		* @return the number of columns in this matrix
-		*/
+	 * @return the number of columns in this matrix
+	 */
 	public int getNbOfColumns() {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		return this.values[0].length;
 	}
 
 	/**
-		* Returns the value at the given position in the matrix.
-		*
-		* @param line indicates the index for the line
-		* @param col  indicates the index for the column
-		* @return the value at the indicated position
-		*/
+	 * Returns the value at the given position in the matrix.
+	 *
+	 * @param line indicates the index for the line
+	 * @param col  indicates the index for the column
+	 * @return the value at the indicated position
+	 */
 	public double get(final int line, final int col) {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		return this.values[line][col];
 	}
 
 	/**
-		* Calculates the transpose of this matrix.
-		*
-		* @return the transpose of this matrix
-		*/
+	 * Calculates the transpose of this matrix.
+	 *
+	 * @return the transpose of this matrix
+	 */
 	public Matrix transpose() {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		double[][] transposedValues = new double[this.getNbOfColumns()][this.getNbOfLines()];
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				transposedValues[j][i] = this.values[i][j];
+			}
+		}
+		return new Matrix(transposedValues);
 	}
 
 	/**
-		* Calculates the product of this matrix with the given scalar value.
-		*
-		* @param scalar the scalar value to multiply with
-		* @return the scalar product
-		*/
+	 * Calculates the product of this matrix with the given scalar value.
+	 *
+	 * @param scalar the scalar value to multiply with
+	 * @return the scalar product
+	 */
 	public Matrix multiply(final double scalar) {
 		// TODO: implement
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-		* Calculates the product of this matrix with another matrix.
-		*
-		* @param other the other matrix to multiply with
-		* @return the matrix product
-		*/
+	 * Calculates the product of this matrix with another matrix.
+	 *
+	 * @param other the other matrix to multiply with
+	 * @return the matrix product
+	 */
 	public Matrix multiply(final Matrix other) {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		if (this.getNbOfColumns() != other.getNbOfLines() ) {
+			throw new IllegalArgumentException("Dimension mismatch");
+		}
+		if(this.equals(other) && this.getNbOfLines() != this.getNbOfColumns()) {
+			throw new IllegalArgumentException("Matrix is not cubic!");
+		}
+		// the result matrix inherits the smaller dimension of both others
+		int lines = this.getNbOfLines();
+		int columns = ((this.getNbOfColumns() < other.getNbOfColumns()) ? this.getNbOfColumns()
+				: other.getNbOfColumns());
+		double[][] multiplyValues = new double[lines][columns];
+		for (int i = 0; i < lines; i++) {
+			for (int j = 0; j < columns; j++) {
+				multiplyValues[i][j] = this.getProductRowCol(i, j, other);
+			}
+		}
+
+		return new Matrix(multiplyValues);
+	}
+
+	private double getProductRowCol(int lineNr, int colNr, final Matrix other) {
+		double product = 0.0;
+		int maxSizeRowCol = (this.getNbOfColumns() > other.getNbOfLines()) ? this.getNbOfColumns()
+				: other.getNbOfLines();
+		for (int i = 0; i < maxSizeRowCol; i++) {
+			if (i >= this.getNbOfColumns() || i >= other.getNbOfLines()) {
+				continue;
+			}
+			product += this.values[lineNr][i] * other.get(i, colNr);
+		}
+		return product;
 	}
 
 	/**
-		* Calculates the sum of this matrix with another matrix.
-		*
-		* @param other the other matrix to add with
-		* @return the matrix sum
-		*/
+	 * Calculates the sum of this matrix with another matrix.
+	 *
+	 * @param other the other matrix to add with
+	 * @return the matrix sum
+	 */
 	public Matrix add(final Matrix other) {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		// we can only add matrix to matrix if dimensions are the same
+		if (this.getNbOfLines() != other.getNbOfLines() || this.getNbOfColumns() != other.getNbOfColumns()) {
+			throw new IllegalArgumentException("Can not perform matrix.add, cause dimensions are not the same");
+		}
+		double[][] valuesSum = new double[this.getNbOfLines()][this.getNbOfColumns()];
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				valuesSum[i][j] = this.values[i][j] + other.get(i, j);
+			}
+		}
+		return new Matrix(valuesSum);
 	}
 
 	@Override
@@ -119,13 +158,40 @@ public class Matrix {
 
 	@Override
 	public boolean equals(final Object obj) {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Matrix)) {
+			return false;
+		}
+		// typecast obj so we can use the Matrix methodes, this is save because we
+		// checked in advance, that obj is instanceof Matrix
+		Matrix matrix = (Matrix) obj;
+		if (this.getNbOfColumns() != matrix.getNbOfColumns() || this.getNbOfLines() != matrix.getNbOfLines()) {
+			return false;
+		}
+
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				if (matrix.get(i, j) != this.values[i][j]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		// implementation optional
-		return super.toString();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			sb.append("| ");
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				sb.append(Double.toString(this.values[i][j]));
+				sb.append(":");
+			}
+			sb.append(" | \n");
+		}
+		return sb.toString();
 	}
 }
