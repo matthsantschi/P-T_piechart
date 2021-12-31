@@ -3,6 +3,7 @@
 	*/
 package ch.bfh.matrix;
 
+
 /**
  * Represents a two-dimensional matrix of double-values. Objects are immutable
  * and methods implementing matrix operations always return new matrix objects.
@@ -35,8 +36,12 @@ public class Matrix {
 				throw new IllegalArgumentException("Please provide some Matrix Input");
 			}
 		}
-
-		this.values = values;
+		this.values = new double[values.length][values[0].length];
+		for (int i = 0; i < values.length; i++) {
+			for (int j = 0; j < values[0].length; j++) {
+				this.values[i][j] = values[i][j];
+			}	
+		}
 	}
 
 	/**
@@ -86,8 +91,13 @@ public class Matrix {
 	 * @return the scalar product
 	 */
 	public Matrix multiply(final double scalar) {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		double[][] matrixScalar = new double[this.getNbOfLines()][this.getNbOfColumns()];
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				matrixScalar[i][j] =  values[i][j] * scalar;
+			}
+		}
+		return new Matrix(matrixScalar);
 	}
 
 	/**
@@ -97,10 +107,10 @@ public class Matrix {
 	 * @return the matrix product
 	 */
 	public Matrix multiply(final Matrix other) {
-		if (this.getNbOfColumns() != other.getNbOfLines() ) {
+		if (this.getNbOfColumns() != other.getNbOfLines()) {
 			throw new IllegalArgumentException("Dimension mismatch");
 		}
-		if(this.equals(other) && this.getNbOfLines() != this.getNbOfColumns()) {
+		if (this.equals(other) && this.getNbOfLines() != this.getNbOfColumns()) {
 			throw new IllegalArgumentException("Matrix is not cubic!");
 		}
 		// the result matrix inherits the smaller dimension of both others
@@ -138,8 +148,8 @@ public class Matrix {
 	 */
 	public Matrix add(final Matrix other) {
 		// we can only add matrix to matrix if dimensions are the same
-		if (this.getNbOfLines() != other.getNbOfLines() || this.getNbOfColumns() != other.getNbOfColumns()) {
-			throw new IllegalArgumentException("Can not perform matrix.add, cause dimensions are not the same");
+		if (this.getNbOfLines() != other.getNbOfLines()) {
+			throw new UnsupportedOperationException();
 		}
 		double[][] valuesSum = new double[this.getNbOfLines()][this.getNbOfColumns()];
 		for (int i = 0; i < this.getNbOfLines(); i++) {
@@ -152,8 +162,13 @@ public class Matrix {
 
 	@Override
 	public int hashCode() {
-		// TODO: implement
-		throw new UnsupportedOperationException();
+		int hash = 0;
+		for (int i = 0; i < this.getNbOfLines(); i++) {
+			for (int j = 0; j < this.getNbOfColumns(); j++) {
+				hash += Double.hashCode(Math.round(values[i][j]));
+			}
+		}
+		return hash;
 	}
 
 	@Override
@@ -173,7 +188,7 @@ public class Matrix {
 
 		for (int i = 0; i < this.getNbOfLines(); i++) {
 			for (int j = 0; j < this.getNbOfColumns(); j++) {
-				if (matrix.get(i, j) != this.values[i][j]) {
+				if (Math.abs(matrix.get(i, j) - this.values[i][j]) > Matrix.EPSILON) {
 					return false;
 				}
 			}
