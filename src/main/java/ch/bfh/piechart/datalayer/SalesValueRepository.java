@@ -25,7 +25,9 @@ public class SalesValueRepository {
 	// TODO Complete JDBC-SQL statement
 	private static final String INSERT_QUERY = "INSERT INTO SalesValue VALUES (null, ?, ?, ?);";
 	// TODO Complete JDBC-SQL statement
-	private static final String UPDATE_QUERY = "UPDATE SalesValue SET  SalesValue.productId = ?, SalesValue.value = ?, SalesValue.percentage = ? WHERE SalesValue.id =?;";
+	private static final String UPDATE_QUERY = "UPDATE SalesValue SET SalesValue. "
+			+ "productId = ?, SalesValue.value = ?, SalesValue.percentage = ? "
+			+ "WHERE SalesValue.id =?;";
 	// TODO Complete JDBC-SQL statement
 	private static final String DELETE_QUERY = "DELETE FROM SalesValue WHERE SalesValue.id = ?;";
 

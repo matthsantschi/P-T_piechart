@@ -13,7 +13,6 @@ import ch.bfh.piechart.datalayer.SalesValueRepository;
 
 // TODO Complete import statements
 
-
 /**
  * Service class providing sales value information as a pie chart. Upon loading
  * this class, then 1) all sales values are loaded from the database, 2) there
@@ -48,8 +47,9 @@ public class PieChartProvider {
 			for (SalesValue sv : list) {
 				sum += sv.getValue();
 			}
-			for (SalesValue sv :  list) {
-				sv.setPercentage((sv.getValue()/sum) * 100);
+			// CHECKSTYLE:OFF MagicNumber
+			for (SalesValue sv : list) {
+				sv.setPercentage((sv.getValue() / sum) * 100);
 				salesValueRepository.update(sv);
 			}
 		} catch (SQLException e) {

@@ -3,13 +3,11 @@
 	*/
 package ch.bfh.piechart.ui;
 
-import ch.bfh.piechart.model.MockPieChart;
 import ch.bfh.piechart.model.PieChart;
 import ch.bfh.piechart.model.PieChartObserver;
 import ch.bfh.piechart.model.PieChartProvider;
 import ch.bfh.piechart.model.PieChartSlice;
 
-import ch.bfh.piechart.model.ConcretePieChart;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -17,8 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 /**
-	* Controller for the JavaFX representation of the pie chart.
-	*/
+ * Controller for the JavaFX representation of the pie chart.
+ */
 public class ChartController implements PieChartObserver {
 
 	@FXML
@@ -31,9 +29,9 @@ public class ChartController implements PieChartObserver {
 	private CircleSector[] sectors;
 
 	/**
-		* Creates the controller. Gets the pie chart model from the provider class and
-		* creates its visual representation.
-		*/
+	 * Creates the controller. Gets the pie chart model from the provider class and
+	 * creates its visual representation.
+	 */
 	public ChartController() {
 
 		Platform.runLater(() -> {
@@ -55,9 +53,9 @@ public class ChartController implements PieChartObserver {
 				pieChart.addObserver(this);
 				// TODO For each slice in the chart, create a CircleSector instance and add it
 				// to the collection of circle sectors. In addition:
-				// - register the pieChart.onClick() method as event handler at each circle sector
+				// - register the pieChart.onClick() method as event handler at each circle
+				// sector
 				// - add the circle sector to the children of the pane
-
 
 				sectors = new CircleSector[pieChart.getNbOfSlices()];
 				for (int i = 0; i < pieChart.getNbOfSlices(); i++) {
@@ -65,8 +63,9 @@ public class ChartController implements PieChartObserver {
 					// to the collection of circle sectors.
 					sectors[i] = new CircleSector();
 					sectors[i].update(pieChart.getSlice(i).getCoords());
-					// TODO: register the piechart.onClick() method as event handler at each circle sector
-					int sectorNumber = i; 
+					// TODO: register the piechart.onClick() method as event handler at each circle
+					// sector
+					int sectorNumber = i;
 					sectors[i].setOnMouseClicked(e -> pieChart.onClick(sectorNumber));
 
 					// add the circle sector to the children of the pane
@@ -82,8 +81,8 @@ public class ChartController implements PieChartObserver {
 	}
 
 	/**
-		* Calculate position and radius for the pie chart depending on the window size.
-		*/
+	 * Calculate position and radius for the pie chart depending on the window size.
+	 */
 	void setPosAndRadius() {
 		// CHECKSTYLE:OFF MagicNumber
 		if (pieChart != null) {
@@ -96,9 +95,9 @@ public class ChartController implements PieChartObserver {
 	}
 
 	/**
-		* Called by the JavaFX framework. Sets listeners to be informed when the window
-		* size changes.
-		*/
+	 * Called by the JavaFX framework. Sets listeners to be informed when the window
+	 * size changes.
+	 */
 	public void initialize() {
 
 		ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
@@ -110,17 +109,18 @@ public class ChartController implements PieChartObserver {
 	}
 
 	/**
-		* Update the visual representation of one or all slices.
-		*
-		* @param slice The slice to be updated or null if all slices need to be
-		*              updated.
-		*/
+	 * Update the visual representation of one or all slices.
+	 *
+	 * @param slice The slice to be updated or null if all slices need to be
+	 *              updated.
+	 */
 	@Override
 	public void update(PieChartSlice slice) {
-		// TODO Given the slice of a pie chart then update the corresponding circle sector
+		// TODO Given the slice of a pie chart then update the corresponding circle
+		// sector
 		// else if null is given then update all circle sectors.
 		if (slice != null) {
-			 	sectors[slice.getId() -1 ].update(slice.getCoords());
+			sectors[slice.getId() - 1].update(slice.getCoords());
 		} else {
 			for (int i = 0; i < pieChart.getNbOfSlices(); i++) {
 				sectors[i].update(pieChart.getSlice(i).getCoords());

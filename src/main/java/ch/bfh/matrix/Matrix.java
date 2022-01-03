@@ -3,7 +3,6 @@
 	*/
 package ch.bfh.matrix;
 
-
 /**
  * Represents a two-dimensional matrix of double-values. Objects are immutable
  * and methods implementing matrix operations always return new matrix objects.
@@ -40,7 +39,7 @@ public class Matrix {
 		for (int i = 0; i < values.length; i++) {
 			for (int j = 0; j < values[0].length; j++) {
 				this.values[i][j] = values[i][j];
-			}	
+			}
 		}
 	}
 
@@ -94,7 +93,7 @@ public class Matrix {
 		double[][] matrixScalar = new double[this.getNbOfLines()][this.getNbOfColumns()];
 		for (int i = 0; i < this.getNbOfLines(); i++) {
 			for (int j = 0; j < this.getNbOfColumns(); j++) {
-				matrixScalar[i][j] =  values[i][j] * scalar;
+				matrixScalar[i][j] = values[i][j] * scalar;
 			}
 		}
 		return new Matrix(matrixScalar);
