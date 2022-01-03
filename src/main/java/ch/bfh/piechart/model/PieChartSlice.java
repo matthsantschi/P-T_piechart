@@ -24,4 +24,6 @@ public interface PieChartSlice {
 	 */
 	void move();
 
+	int getId();
+
 }

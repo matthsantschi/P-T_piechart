@@ -3,9 +3,13 @@
  */
 package ch.bfh.piechart.model;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
+import ch.bfh.piechart.datalayer.ConnectionManager;
 import ch.bfh.piechart.datalayer.SalesValue;
+import ch.bfh.piechart.datalayer.SalesValueRepository;
 
 // TODO Complete import statements
 
@@ -17,6 +21,9 @@ import ch.bfh.piechart.datalayer.SalesValue;
  * objects are persisted.
  */
 public class PieChartProvider {
+
+	private static Connection connection;
+	private static SalesValueRepository salesValueRepository;
 
 	/**
 	 * Loads all sales values, computes there relative percentage values, and stores
@@ -32,6 +39,23 @@ public class PieChartProvider {
 		 * Note: If any kind of exception is thrown in the above 4 steps then
 		 * catch it in a RuntimeExpetion and throw it from within the static block.
 		 */
+		connection = ConnectionManager.getConnection(true);
+
+		salesValueRepository = new SalesValueRepository(connection);
+		try {
+			List<SalesValue> list = salesValueRepository.findAll();
+			double sum = 0;
+			for (SalesValue sv : list) {
+				sum += sv.getValue();
+			}
+			for (SalesValue sv :  list) {
+				sv.setPercentage((sv.getValue()/sum) * 100);
+				salesValueRepository.update(sv);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Problem while reding/updating salesValues");
+		}
+
 	}
 
 	/**
@@ -41,8 +65,16 @@ public class PieChartProvider {
 	 * @throws Exception if sales values cannot be obtained
 	 */
 	public PieChart getPieChart() throws Exception {
-		// TODO Implement body
-		throw new UnsupportedOperationException();
+		List<SalesValue> list;
+		try {
+			list = getPieChartSalesValues();
+			if (list.size() == 0) {
+				throw new Exception("Sales Values can not be obtained");
+			}
+		} catch (SQLException e) {
+			throw new Exception("Sales Values can not be obtained");
+		}
+		return new ConcretePieChart(list);
 	}
 
 	/**
@@ -53,7 +85,10 @@ public class PieChartProvider {
 	 * @throws Exception if sales values cannot be obtained
 	 */
 	public List<SalesValue> getPieChartSalesValues() throws Exception {
-		// TODO Implement body
-		throw new UnsupportedOperationException();
+		List<SalesValue> list = salesValueRepository.findAll();
+		if (list.size() == 0) {
+			throw new UnsupportedOperationException();
+		}
+		return list;
 	}
 }

@@ -72,5 +72,9 @@ public class MockPieChart implements PieChart {
 		public void move() {
 			// not yet implemented
 		}
+		@Override
+		public int getId() {
+			return 0;
+		}
 	}
 }
